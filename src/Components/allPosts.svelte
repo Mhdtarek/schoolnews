@@ -10,13 +10,15 @@
     CardTitle,
     Col,
     Container,
-    Row
+    Row,
+TabContent
   } from 'sveltestrap';
 
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import {firebaseConfig} from "../lib/firebaseConfig.svelte";
+import { loop_guard } from 'svelte/internal';
 
 firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
@@ -24,7 +26,8 @@ export const db = firebase.firestore();
 let posts = [];
 let fbposts = []
 let numberOfPosts = 0
-
+let allPosts = true
+allPosts = true
 db.collection("posts")
 .get()
 .then((querySnapshot) => {
@@ -41,10 +44,17 @@ db.collection("posts")
 })
 let postsBy4 = numberOfPosts / 4
 
+function readMore(postContent, postName, postDescription) {
+console.log(postContent)
+allPosts = false
+
+}
+
 
 </script>
 
 <main>
+{#if allPosts}
   <Container>
     <div class="gridcon">
       {#each posts as post}
@@ -57,12 +67,23 @@ let postsBy4 = numberOfPosts / 4
             <CardText>
               {post.description.description}
             </CardText>
+            <Button on:click={() => readMore(post.content.content, post.name.name, post.description.description)}>Läs Mer</Button>
           </CardBody>
         </Card>
       </Col>
       {/each}
     </div>
   </Container>
+{/if}
+{#if !allPosts}
+<Container>
+
+
+
+</Container>
+{/if}
+
+
 </main>
 
 <style>

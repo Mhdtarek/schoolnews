@@ -1,6 +1,6 @@
 <script>
 import {Button, Container} from 'sveltestrap'
-import AllPosts from './allposts.svelte'
+import AllPosts from './allPosts.svelte'
 import Writedata from './writeData.svelte'
 let user = { loggedIn: false };
 
