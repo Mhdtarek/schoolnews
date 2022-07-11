@@ -51,14 +51,11 @@ let postsBy4 = numberOfPosts / 4
       <Col>
         <Card>
           <CardHeader>
-            <CardTitle>{post.name}</CardTitle>
+            <CardTitle>{post.name.name}</CardTitle>
           </CardHeader>
           <CardBody>
             <CardText>
-              {post.content}
-              work
-              <p>rating: {post.rating}</p>
-              
+              {post.description.description}
             </CardText>
           </CardBody>
         </Card>
