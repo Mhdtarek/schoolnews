@@ -86,7 +86,7 @@ fullPostDescription = postDescription
             <CardText>
               {post.description.description}
             </CardText>
-            <Button on:click={() => readMore(post.content.content, post.name.name, post.description.description)}>Läs Mer</Button>
+            <Button color="primary" on:click={() => readMore(post.content.content, post.name.name, post.description.description)}>Läs Mer</Button>
           </CardBody>
         </Card>
       </Col>
@@ -95,12 +95,14 @@ fullPostDescription = postDescription
   </Container>
 {/if}
 {#if !allPosts}
-<Container>
-<Button on:click={() => allPosts = true}>Läs Mer</Button>
-<h2>{fullPostName}</h2>
-<h5>{fullPostDescription}</h5>
-<p>{fullPostContent}</p>
-</Container>
+<div style="margin-top: 15px">
+  <Container>
+    <Button color="dark" on:click={() => allPosts = true}>Tillbaka</Button>
+    <h2>{fullPostName}</h2>
+    <h5>{fullPostDescription}</h5>
+    <p>{fullPostContent}</p>
+  </Container>
+</div>
 {/if}
 {/if}
 {#if posters.toggle}
