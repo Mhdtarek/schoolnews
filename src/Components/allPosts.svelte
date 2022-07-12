@@ -11,14 +11,13 @@
     Col,
     Container,
     Row,
-TabContent
   } from 'sveltestrap';
 
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import {firebaseConfig} from "../lib/firebaseConfig.svelte";
-import { loop_guard } from 'svelte/internal';
+import WriteData from './writeData.svelte'
 
 firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
@@ -26,8 +25,16 @@ export const db = firebase.firestore();
 let posts = [];
 let fbposts = []
 let numberOfPosts = 0
-let allPosts = true
+export let allPosts = true
 allPosts = true
+
+let fullPostName = ''
+let fullPostContent = ''
+let fullPostDescription = ''
+
+
+
+
 db.collection("posts")
 .get()
 .then((querySnapshot) => {
@@ -45,15 +52,17 @@ db.collection("posts")
 let postsBy4 = numberOfPosts / 4
 
 function readMore(postContent, postName, postDescription) {
-console.log(postContent)
 allPosts = false
+fullPostName = postName
+fullPostContent = postContent
+fullPostDescription = postDescription
 
 }
 
 
 </script>
 
-<main>
+<main class="main">
 {#if allPosts}
   <Container>
     <div class="gridcon">
@@ -77,9 +86,9 @@ allPosts = false
 {/if}
 {#if !allPosts}
 <Container>
-
-
-
+{fullPostName}
+{fullPostDescription}
+<p>{fullPostContent}</p>
 </Container>
 {/if}
 
@@ -87,6 +96,9 @@ allPosts = false
 </main>
 
 <style>
+.main {
+  white-space: pre-line;
+}
 .gridcon {
 display: grid;
 grid-template-columns: 1fr 1fr 1fr 1fr;

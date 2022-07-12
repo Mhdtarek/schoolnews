@@ -1,5 +1,5 @@
 <script>
-import {Button, Container} from 'sveltestrap'
+import {Button, Container, FormGroup} from 'sveltestrap'
 import AllPosts from './allPosts.svelte'
 import Writedata from './writeData.svelte'
 let user = { loggedIn: false };
@@ -11,9 +11,10 @@ function toggle() {
 
 </script>
 <main>
+
 {#if !user.loggedIn}
 <Container>
-	<Button style="margin: 10px 0;"  on:click={toggle}>
+	<Button color="primary" style="margin: 10px 0;"  on:click={toggle}>
 		skapa post
 	</Button>
 </Container>
