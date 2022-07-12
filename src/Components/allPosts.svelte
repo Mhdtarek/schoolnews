@@ -3,14 +3,12 @@
     Button,
     Card,
     CardBody,
-    CardFooter,
     CardHeader,
-    CardSubtitle,
     CardText,
     CardTitle,
     Col,
     Container,
-    Row,
+    Icon
   } from 'sveltestrap';
 
 
@@ -25,14 +23,22 @@ export const db = firebase.firestore();
 let posts = [];
 let fbposts = []
 let numberOfPosts = 0
-export let allPosts = true
+let allPosts = true
 allPosts = true
+let posters = { toggle: false };
+
+
 
 let fullPostName = ''
 let fullPostContent = ''
 let fullPostDescription = ''
 
-
+function toggle() {
+    posters.toggle = !posters.toggle;
+}
+function allPostsTrue() {
+  allPosts = true
+}
 
 
 db.collection("posts")
@@ -63,8 +69,12 @@ fullPostDescription = postDescription
 </script>
 
 <main class="main">
+{#if !posters.toggle}
 {#if allPosts}
   <Container>
+    <Button color="primary" style="margin: 10px 0;"  on:click={toggle}>
+      skapa post
+    </Button>
     <div class="gridcon">
       {#each posts as post}
       <Col>
@@ -86,13 +96,18 @@ fullPostDescription = postDescription
 {/if}
 {#if !allPosts}
 <Container>
-{fullPostName}
-{fullPostDescription}
+<Button on:click={() => allPosts = true}>Läs Mer</Button>
+<h2>{fullPostName}</h2>
+<h5>{fullPostDescription}</h5>
 <p>{fullPostContent}</p>
 </Container>
 {/if}
-
-
+{/if}
+{#if posters.toggle}
+<div class="marginup">
+  <WriteData/>
+</div>
+{/if}
 </main>
 
 <style>
@@ -104,6 +119,20 @@ display: grid;
 grid-template-columns: 1fr 1fr 1fr 1fr;
 column-gap: 10px;
 row-gap: 15px;
-
 }
+.marginup {
+  margin-top: 30px;
+}
+@media only screen and (max-width: 900px) {
+.gridcon {
+  grid-template-columns: 1fr 1fr;
+}  
+}
+@media only screen and (max-width: 1500) {
+.gridcon {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+}
+
+
 </style>

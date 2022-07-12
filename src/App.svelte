@@ -1,8 +1,8 @@
 <script>
-import Post from './Components/Post.svelte'
+import Allposts from './Components/allPosts.svelte'
 import NavBar from "./Components/navBar.svelte"
 </script>
 <main>
 <NavBar/>
-<Post/>
+<Allposts/>
 </main>
