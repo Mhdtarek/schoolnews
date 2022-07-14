@@ -8,7 +8,8 @@
     CardTitle,
     Col,
     Container,
-    Icon
+    Icon,
+    Row
   } from 'sveltestrap';
 
 
@@ -98,7 +99,7 @@ fullPostDescription = postDescription
 </script>
 
 <main class="main">
-<Button color="primary" on:click={() => firebaseAuth()}>auth</Button>
+<Row><Button color="primary" on:click={() => firebaseAuth()}>auth</Button></Row>
 {#if !posters.toggle}
 {#if allPosts}
   <Container>
@@ -140,6 +141,7 @@ fullPostDescription = postDescription
   <WriteData/>
 </div>
 {/if}
+
 </main>
 
 <style>
