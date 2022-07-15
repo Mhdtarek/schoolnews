@@ -55,7 +55,13 @@ function firebaseAuth() {
     var token = credential.accessToken;
     // The signed-in user info.
     var user = result.user;
-    console.log(user, token)
+    console.log(user)
+    db.collection('users').doc(user.uid).set({
+              email: user.email,
+              name: user.displayName,
+              photoUrl: user.photoURL,
+              creation: user.metadata.creationTime
+    });
     // ...
   }).catch((error) => {
     // Handle Errors here.
