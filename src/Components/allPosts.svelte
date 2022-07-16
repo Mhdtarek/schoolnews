@@ -19,8 +19,14 @@ import {firebaseConfig} from "../lib/firebaseConfig.svelte";
 import WriteData from './writeData.svelte'
 import "firebase/auth";
 
+if (!firebase.apps.length) {
+   firebase.initializeApp({});
+}
+else {
+   firebase.app();
+}
+
 var provider = new firebase.auth.GoogleAuthProvider();
-firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
 
 
@@ -43,39 +49,6 @@ function toggle() {
 function allPostsTrue() {
   allPosts = true
 }
-
-function firebaseAuth() {
-  firebase.auth()
-  .signInWithPopup(provider)
-  .then((result) => {
-    /** @type {firebase.auth.OAuthCredential} */
-    var credential = result.credential;
-
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    var token = credential.accessToken;
-    // The signed-in user info.
-    var user = result.user;
-    console.log(user)
-    db.collection('users').doc(user.uid).set({
-              email: user.email,
-              name: user.displayName,
-              photoUrl: user.photoURL,
-              creation: user.metadata.creationTime
-    });
-    // ...
-  }).catch((error) => {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    // The email of the user's account used.
-    var email = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    var credential = error.credential;
-    // ...
-  });
-
-}
-
 
 db.collection("posts")
 .get()
@@ -105,7 +78,6 @@ fullPostDescription = postDescription
 </script>
 
 <main class="main">
-<Row><Button color="primary" on:click={() => firebaseAuth()}>auth</Button></Row>
 {#if !posters.toggle}
 {#if allPosts}
   <Container>
