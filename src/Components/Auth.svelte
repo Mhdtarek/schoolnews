@@ -14,6 +14,16 @@ else {
 
 var provider = new firebase.auth.GoogleAuthProvider();
 export const db = firebase.firestore();
+let authToggle = { toggle: false };
+export let isLoggedIn = { toggle: false };
+
+
+export let username = ''
+export let userDisplayName = ''
+export let userPhotoURL = ''
+export let userCreation = ''
+export let role = ''
+export let klass = ''
 
 function Login() {
   firebase.auth()
@@ -25,14 +35,27 @@ function Login() {
     // This gives you a Google Access Token. You can use it to access the Google API.
     var token = credential.accessToken;
     // The signed-in user info.
+
     var user = result.user;
     console.log(user)
-    db.collection('users').doc(user.uid).set({
-              email: user.email,
-              name: user.displayName,
-              photoUrl: user.photoURL,
-              creation: user.metadata.creationTime
+    username = user.uid
+    userDisplayName = user.displayName
+    userPhotoURL = user.photoURL
+    userCreation = user.metadata.creationTime
+
+
+    db.collection("users").doc(user.uid).get().then((doc) => {
+        if (doc.exists) {
+            role = doc.data().role
+            klass = doc.data().klass
+            isLoggedIn.toggle = isLoggedIn.toggle = true
+        } else {
+          console.log("skapa konto först!")
+        }
+    }).catch((error) => {
+        console.log("Error collection getting document:", error);
     });
+
     
   }).catch((error) => {
     // Handle Errors here.
@@ -80,6 +103,7 @@ function Signup() {
 }
 </script>
 <main>
+
 <Row>
   <Col></Col>
 <Col>
