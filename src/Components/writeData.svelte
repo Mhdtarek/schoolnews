@@ -3,9 +3,11 @@ import { FormGroup, Input, Label, Col, Row, Button } from 'sveltestrap';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import {firebaseConfig} from "../lib/firebaseConfig.svelte";
+import {userDisplayName, userPhotoURL, username} from './Auth.svelte'
+
 
 if (!firebase.apps.length) {
-   firebase.initializeApp({});
+   firebase.initializeApp(firebaseConfig);
 }
 else {
    firebase.app();
@@ -17,10 +19,16 @@ let content = '';
 export const db = firebase.firestore();
 
     function post(){
+    let userDisplayName2 = {$userDisplayName}
+    let userPhotoURL2 = {$userPhotoURL}
+    let userId2 = {$username}
     db.collection("posts").add({
     name: {name},
     description: {description},
-    content: {content}
+    content: {content},
+    userCreator: userDisplayName2,
+    userCreatorImage: userPhotoURL2,
+    userId: userId2,
     })
     .then((docRef) => {
         console.log("Document written with ID: ", docRef.id);

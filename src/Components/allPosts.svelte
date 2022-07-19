@@ -42,7 +42,8 @@ let posters = { toggle: false };
 let fullPostName = ''
 let fullPostContent = ''
 let fullPostDescription = ''
-
+let fullPostCreatorImage = ''
+let fullPostCreatorName = ''
 function toggle() {
     posters.toggle = !posters.toggle;
 }
@@ -66,12 +67,13 @@ db.collection("posts")
 })
 let postsBy4 = numberOfPosts / 4
 
-function readMore(postContent, postName, postDescription) {
+function readMore(postContent, postName, postDescription, creatorIMG, creatorText) {
 allPosts = false
+fullPostCreatorImage = creatorIMG
 fullPostName = postName
 fullPostContent = postContent
 fullPostDescription = postDescription
-
+fullPostCreatorName = creatorText
 }
 
 
@@ -95,7 +97,7 @@ fullPostDescription = postDescription
             <CardText>
               {post.description.description}
             </CardText>
-            <Button color="primary" on:click={() => readMore(post.content.content, post.name.name, post.description.description)}>Läs Mer</Button>
+            <Button color="primary" on:click={() => readMore(post.content.content, post.name.name, post.description.description, post.userCreatorImage.$userPhotoURL, post.userCreator.$userDisplayName)}>Läs Mer</Button>
           </CardBody>
         </Card>
       </Col>
@@ -108,6 +110,9 @@ fullPostDescription = postDescription
   <Container>
     <Button color="dark" on:click={() => allPosts = true}>Tillbaka</Button>
     <h2>{fullPostName}</h2>
+    <div style="margin-bottom: 10px;">
+      <img src={fullPostCreatorImage} alt="" width="32" height="32"> <span>skapat av {fullPostCreatorName}</span>
+    </div>
     <h5>{fullPostDescription}</h5>
     <p>{fullPostContent}</p>
   </Container>

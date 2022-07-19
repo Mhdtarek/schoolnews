@@ -3,7 +3,8 @@ import 'firebase/firestore';
 import firebase from 'firebase/app';
 import "firebase/auth";
 import {firebaseConfig} from "../lib/firebaseConfig.svelte";
-import {Button, Row, Col} from 'sveltestrap'
+import {Button, Row, Col, Container, Modal} from 'sveltestrap'
+import {writable} from 'svelte/store'
 
 if (!firebase.apps.length) {
    firebase.initializeApp(firebaseConfig);
@@ -11,19 +12,21 @@ if (!firebase.apps.length) {
 else {
    firebase.app();
 }
-
 var provider = new firebase.auth.GoogleAuthProvider();
 export const db = firebase.firestore();
-let authToggle = { toggle: false };
-export let isLoggedIn = { toggle: false };
+export let isLoggedIn = writable(false)
+export let isNotLoggedIn = writable(false)
+let authToggle = { toggle: true };
 
+let open = false;
+const toggle = () => (open = !open);
 
-export let username = ''
-export let userDisplayName = ''
-export let userPhotoURL = ''
-export let userCreation = ''
-export let role = ''
-export let klass = ''
+export const username = writable(' ')
+export const userDisplayName = writable('')
+export const userPhotoURL = writable('')
+export const userCreation = writable('')
+export const role = writable('')
+export const klass = writable('')
 
 function Login() {
   firebase.auth()
@@ -35,20 +38,18 @@ function Login() {
     // This gives you a Google Access Token. You can use it to access the Google API.
     var token = credential.accessToken;
     // The signed-in user info.
-
     var user = result.user;
-    console.log(user)
-    username = user.uid
-    userDisplayName = user.displayName
-    userPhotoURL = user.photoURL
-    userCreation = user.metadata.creationTime
-
-
+    //checks if account exists in database otherwise it asks you to sign up
     db.collection("users").doc(user.uid).get().then((doc) => {
         if (doc.exists) {
-            role = doc.data().role
-            klass = doc.data().klass
-            isLoggedIn.toggle = isLoggedIn.toggle = true
+          username.set(user.uid)
+          userDisplayName.set(user.displayName)
+          userPhotoURL.set(user.photoURL)
+          userCreation.set(user.metadata.creationTime)
+          role.set(doc.data().role)
+          klass.set(doc.data().klass)
+          isLoggedIn.set(true)
+          isNotLoggedIn.set(true)
         } else {
           console.log("skapa konto först!")
         }
@@ -86,7 +87,6 @@ function Signup() {
               name: user.displayName,
               photoUrl: user.photoURL,
               creation: user.metadata.creationTime,
-              newUser: true
     });
     
   }).catch((error) => {
@@ -103,7 +103,6 @@ function Signup() {
 }
 </script>
 <main>
-
 <Row>
   <Col></Col>
 <Col>
@@ -122,12 +121,14 @@ function Signup() {
 </Col>
 <Col></Col>
 </Row>
-
 </main>
 
 <style>
 
 main {
   overflow-x: hidden; /* Hide horizontal scrollbar */
+  height: 100%;
+  margin-top: 100px;
 }
+
 </style>
