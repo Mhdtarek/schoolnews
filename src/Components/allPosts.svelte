@@ -108,10 +108,10 @@ fullPostCreatorName = creatorText
 {#if !allPosts}
 <div style="margin-top: 15px">
   <Container>
-    <Button color="dark" on:click={() => allPosts = true}>Tillbaka</Button>
+    <Button color="primary" on:click={() => allPosts = true}>Tillbaka</Button>
     <h2>{fullPostName}</h2>
-    <div style="margin-bottom: 10px;">
-      <img src={fullPostCreatorImage} alt="" width="32" height="32"> <span>skapat av {fullPostCreatorName}</span>
+    <div color="dark" style="margin-bottom: 10px;">
+      <img style="border-radius: 100%;" src={fullPostCreatorImage} alt="" width="32" height="32"> <span>skapat av {fullPostCreatorName}</span>
     </div>
     <h5>{fullPostDescription}</h5>
     <p>{fullPostContent}</p>
@@ -121,6 +121,12 @@ fullPostCreatorName = creatorText
 {/if}
 {#if posters.toggle}
 <div class="marginup">
+<Container>
+  <Button color="primary" style="margin: 0px 0;"  on:click={toggle}>
+    Gå tillbaka
+  </Button>
+</Container>
+
   <WriteData/>
 </div>
 {/if}
@@ -138,7 +144,7 @@ column-gap: 10px;
 row-gap: 15px;
 }
 .marginup {
-  margin-top: 30px;
+  margin-top: 10px;
 }
 @media only screen and (max-width: 900px) {
 .gridcon {

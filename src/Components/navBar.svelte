@@ -21,10 +21,8 @@
           <DropdownToggle nav class="nav-link"><img src={$userPhotoURL} alt="user" height="32" width="32"></DropdownToggle>
           <DropdownMenu dark>
             <DropdownItem header>{$userDisplayName}</DropdownItem>
-            <DropdownItem href="#" active>Lancelot</DropdownItem>
-            <DropdownItem href="#">Link</DropdownItem>
-            <DropdownItem href="#">Secret</DropdownItem>
-            <DropdownItem href="#">Chimp</DropdownItem>
+            <DropdownItem href="#">inställningar</DropdownItem>
+            <DropdownItem href="#">logga UT</DropdownItem>
           </DropdownMenu>
         </Dropdown>
       </NavItem>

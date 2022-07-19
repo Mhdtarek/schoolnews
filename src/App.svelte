@@ -13,7 +13,7 @@ import {username, userDisplayName, userCreation, userPhotoURL, role, klass, isLo
 {#if $isLoggedIn}
 <Allposts/>
 {/if}
-<div>
+<div style="display: none;">
     <img src={$userPhotoURL} alt="">
     <p>{$username}</p>
     <p>{$userDisplayName}</p>
@@ -26,6 +26,9 @@ import {username, userDisplayName, userCreation, userPhotoURL, role, klass, isLo
     <div>  
         <Auth/>
     </div>
+{/if}
+{#if $role === 'teacher'}
+teacher
 {/if}
 </main>
 <style>
