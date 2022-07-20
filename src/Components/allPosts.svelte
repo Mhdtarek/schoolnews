@@ -8,7 +8,8 @@
     CardTitle,
     Col,
     Container,
-    Icon
+    Icon,
+    Row
   } from 'sveltestrap';
 
 
@@ -18,8 +19,14 @@ import {firebaseConfig} from "../lib/firebaseConfig.svelte";
 import WriteData from './writeData.svelte'
 import "firebase/auth";
 
+if (!firebase.apps.length) {
+   firebase.initializeApp({});
+}
+else {
+   firebase.app();
+}
+
 var provider = new firebase.auth.GoogleAuthProvider();
-firebase.initializeApp(firebaseConfig);
 export const db = firebase.firestore();
 
 
@@ -35,40 +42,14 @@ let posters = { toggle: false };
 let fullPostName = ''
 let fullPostContent = ''
 let fullPostDescription = ''
-
+let fullPostCreatorImage = ''
+let fullPostCreatorName = ''
 function toggle() {
     posters.toggle = !posters.toggle;
 }
 function allPostsTrue() {
   allPosts = true
 }
-
-function firebaseAuth() {
-  firebase.auth()
-  .signInWithPopup(provider)
-  .then((result) => {
-    /** @type {firebase.auth.OAuthCredential} */
-    var credential = result.credential;
-
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    var token = credential.accessToken;
-    // The signed-in user info.
-    var user = result.user;
-    console.log(user, token)
-    // ...
-  }).catch((error) => {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    // The email of the user's account used.
-    var email = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    var credential = error.credential;
-    // ...
-  });
-
-}
-
 
 db.collection("posts")
 .get()
@@ -86,19 +67,19 @@ db.collection("posts")
 })
 let postsBy4 = numberOfPosts / 4
 
-function readMore(postContent, postName, postDescription) {
+function readMore(postContent, postName, postDescription, creatorIMG, creatorText) {
 allPosts = false
+fullPostCreatorImage = creatorIMG
 fullPostName = postName
 fullPostContent = postContent
 fullPostDescription = postDescription
-
+fullPostCreatorName = creatorText
 }
 
 
 </script>
 
 <main class="main">
-<Button color="primary" on:click={() => firebaseAuth()}>auth</Button>
 {#if !posters.toggle}
 {#if allPosts}
   <Container>
@@ -116,7 +97,7 @@ fullPostDescription = postDescription
             <CardText>
               {post.description.description}
             </CardText>
-            <Button color="primary" on:click={() => readMore(post.content.content, post.name.name, post.description.description)}>Läs Mer</Button>
+            <Button color="primary" on:click={() => readMore(post.content.content, post.name.name, post.description.description, post.userCreatorImage.$userPhotoURL, post.userCreator.$userDisplayName)}>Läs Mer</Button>
           </CardBody>
         </Card>
       </Col>
@@ -127,8 +108,11 @@ fullPostDescription = postDescription
 {#if !allPosts}
 <div style="margin-top: 15px">
   <Container>
-    <Button color="dark" on:click={() => allPosts = true}>Tillbaka</Button>
+    <Button color="primary" on:click={() => allPosts = true}>Tillbaka</Button>
     <h2>{fullPostName}</h2>
+    <div color="dark" style="margin-bottom: 10px;">
+      <img style="border-radius: .25rem;" src={fullPostCreatorImage} alt="" width="32" height="32"> <span>skapat av {fullPostCreatorName}</span>
+    </div>
     <h5>{fullPostDescription}</h5>
     <p>{fullPostContent}</p>
   </Container>
@@ -137,9 +121,16 @@ fullPostDescription = postDescription
 {/if}
 {#if posters.toggle}
 <div class="marginup">
+<Container>
+  <Button color="primary" style="margin: 0px 0;"  on:click={toggle}>
+    Gå tillbaka
+  </Button>
+</Container>
+
   <WriteData/>
 </div>
 {/if}
+
 </main>
 
 <style>
@@ -153,7 +144,7 @@ column-gap: 10px;
 row-gap: 15px;
 }
 .marginup {
-  margin-top: 30px;
+  margin-top: 10px;
 }
 @media only screen and (max-width: 900px) {
 .gridcon {
