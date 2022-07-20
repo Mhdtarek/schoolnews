@@ -10,25 +10,24 @@
       DropdownMenu,
       DropdownToggle
     } from 'sveltestrap';
-  import {userPhotoURL, userDisplayName, userCreation} from './Auth.svelte'
+  import {userPhotoURL, userDisplayName, userCreation, isLoggedIn} from './Auth.svelte'
   </script>
-  
 <Navbar color="light" light expand="md">
   <NavbarBrand href="#">bbrr</NavbarBrand>
-    <Nav class="ms-auto" navbar>
-      <NavItem>
-        <Dropdown direction="left" nav setActiveFromChild>
-          <DropdownToggle nav class="nav-link"><img src={$userPhotoURL} alt="user" height="32" width="32"></DropdownToggle>
-          <DropdownMenu dark>
-            <DropdownItem header>{$userDisplayName}</DropdownItem>
+  <Nav class="ms-auto" navbar>
+    <NavItem>
+      {#if $isLoggedIn}
+      <Dropdown direction="left" nav setActiveFromChild>
+        <DropdownToggle nav class="nav-link"><img style="border-radius: .25rem;" src={$userPhotoURL} alt="user" height="32" width="32"></DropdownToggle>
+        <DropdownMenu dark>
+          <DropdownItem header>{$userDisplayName}</DropdownItem>
             <DropdownItem href="#">inställningar</DropdownItem>
-            <DropdownItem href="#">logga UT</DropdownItem>
+            <DropdownItem color="primary" on:click={() => window.location.reload()}>Logga ut</DropdownItem>
           </DropdownMenu>
         </Dropdown>
+        {/if}
       </NavItem>
-      <NavItem>
-        
+      <NavItem>    
       </NavItem>
-
     </Nav>
 </Navbar>

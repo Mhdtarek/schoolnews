@@ -3,8 +3,12 @@ import 'firebase/firestore';
 import firebase from 'firebase/app';
 import "firebase/auth";
 import {firebaseConfig} from "../lib/firebaseConfig.svelte";
-import {Button, Row, Col, Container, Modal} from 'sveltestrap'
+import {Button, Row, Col, Container, Modal, Dropdown, DropdownItem, DropdownMenu, DropdownToggle} from 'sveltestrap'
 import {writable} from 'svelte/store'
+import {
+
+  } from 'sveltestrap';
+
 
 if (!firebase.apps.length) {
    firebase.initializeApp(firebaseConfig);
@@ -16,10 +20,7 @@ var provider = new firebase.auth.GoogleAuthProvider();
 export const db = firebase.firestore();
 export let isLoggedIn = writable(false)
 export let isNotLoggedIn = writable(false)
-let authToggle = { toggle: true };
 
-let open = false;
-const toggle = () => (open = !open);
 
 export const username = writable(' ')
 export const userDisplayName = writable('')
@@ -50,6 +51,8 @@ function Login() {
           klass.set(doc.data().klass)
           isLoggedIn.set(true)
           isNotLoggedIn.set(true)
+
+          console.log("logged in!")
         } else {
           console.log("skapa konto först!")
         }
@@ -70,7 +73,30 @@ function Login() {
   });
 
 }
-function Signup() {
+
+</script>
+<script>
+let signupUserId
+let signupUserEmail = ''
+let signupUserDisplayName = ''
+let signupUserphotourl = ''
+let signupUserCreationDate = ''
+let klass = 0
+let signupRole = 'elev'
+
+if (!firebase.apps.length) {
+   firebase.initializeApp(firebaseConfig);
+}
+else {
+   firebase.app();
+}
+
+export const db = firebase.firestore();
+
+let authToggle = false;
+let signupSuccess = false;
+
+function Signup() {  
   firebase.auth()
   .signInWithPopup(provider)
   .then((result) => {
@@ -82,13 +108,16 @@ function Signup() {
     // The signed-in user info.
     var user = result.user;
     console.log(user)
-    db.collection('users').doc(user.uid).set({
-              email: user.email,
-              name: user.displayName,
-              photoUrl: user.photoURL,
-              creation: user.metadata.creationTime,
-    });
-    
+
+    signupUserEmail = user.email
+    signupUserDisplayName = user.displayName
+    signupUserId = user.uid
+    signupUserphotourl = user.photoURL
+    signupUserCreationDate = user.metadata.creationTime
+    signupRole = 'elev'
+
+
+    authToggle = true
   }).catch((error) => {
     // Handle Errors here.
     var errorCode = error.code;
@@ -101,8 +130,21 @@ function Signup() {
   });
 
 }
+function addAcc() {
+  db.collection('users').doc(signupUserId).set({
+              email: signupUserEmail,
+              name: signupUserDisplayName,
+              photoUrl: signupUserphotourl,
+              creation: signupUserCreationDate,
+              role: signupRole,
+              klass: klass
+    });
+     signupSuccess = true 
+}
 </script>
 <main>
+{#if !signupSuccess}
+{#if !authToggle}
 <Row>
   <Col></Col>
 <Col>
@@ -121,6 +163,46 @@ function Signup() {
 </Col>
 <Col></Col>
 </Row>
+{/if}
+{#if authToggle}
+<Row>
+  <Col></Col>
+  <Col>
+    <Row>
+      <Col></Col>
+      <Col>
+        <Dropdown style="height: 450px; overflow: inherit;">
+          <DropdownToggle caret>välj klass</DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem color="primary" on:click={() => klass = 1}>klass 1</DropdownItem>
+              <DropdownItem color="primary" on:click={() => klass = 2}>klass 2</DropdownItem>
+              <DropdownItem color="primary" on:click={() => klass = 3}>klass 3</DropdownItem>
+              <DropdownItem color="primary" on:click={() => klass = 4}>klass 4</DropdownItem>
+              <DropdownItem color="primary" on:click={() => klass = 5}>klass 5</DropdownItem>
+              <DropdownItem color="primary" on:click={() => klass = 6}>klass 6</DropdownItem>
+              <DropdownItem color="primary" on:click={() => klass = 7}>klass 7</DropdownItem>
+              <DropdownItem color="primary" on:click={() => klass = 8}>klass 8</DropdownItem>
+              <DropdownItem color="primary" on:click={() => klass = 9}>klass 9</DropdownItem>
+            </DropdownMenu>
+            <Button color="success" on:click={() => addAcc()}>skapa din konto</Button>
+          </Dropdown>
+        </Col>
+      <Col></Col>
+    </Row>
+  </Col>
+  <Col></Col>
+</Row>
+{/if}
+{/if}
+{#if signupSuccess}
+<Container>
+  <div class="bg-success">
+    <p>  skapat!  </p>
+    <Button color="success" on:click={() => Login()}>Logga in</Button>
+  </div>
+</Container>
+
+{/if}
 </main>
 
 <style>
@@ -128,7 +210,14 @@ function Signup() {
 main {
   overflow-x: hidden; /* Hide horizontal scrollbar */
   height: 100%;
-  margin-top: 100px;
+  margin-top: 200px;
 }
-
+.bg-success {
+border-radius: .25rem;
+margin-top: 10px;
+padding: 15px;
+background-color: rgb(78, 134, 91);
+color: whitesmoke;
+text-align: center;
+}
 </style>

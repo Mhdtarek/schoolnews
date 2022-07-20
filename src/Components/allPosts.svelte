@@ -111,7 +111,7 @@ fullPostCreatorName = creatorText
     <Button color="primary" on:click={() => allPosts = true}>Tillbaka</Button>
     <h2>{fullPostName}</h2>
     <div color="dark" style="margin-bottom: 10px;">
-      <img style="border-radius: 100%;" src={fullPostCreatorImage} alt="" width="32" height="32"> <span>skapat av {fullPostCreatorName}</span>
+      <img style="border-radius: .25rem;" src={fullPostCreatorImage} alt="" width="32" height="32"> <span>skapat av {fullPostCreatorName}</span>
     </div>
     <h5>{fullPostDescription}</h5>
     <p>{fullPostContent}</p>
