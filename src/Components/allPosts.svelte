@@ -18,7 +18,7 @@ import 'firebase/firestore';
 import {firebaseConfig} from "../lib/firebaseConfig.svelte";
 import WriteData from './writeData.svelte'
 import "firebase/auth";
-
+import {klass} from './Auth.svelte'
 if (!firebase.apps.length) {
    firebase.initializeApp({});
 }
@@ -32,6 +32,7 @@ export const db = firebase.firestore();
 
 let posts = [];
 let fbposts = []
+let testpost = [];
 let numberOfPosts = 0
 let allPosts = true
 allPosts = true
@@ -62,11 +63,22 @@ db.collection("posts")
             numberOfPosts += 1
             fbposts = [...fbposts, post]
             posts = fbposts
-        });
-        console.log(posts)        
-})
-let postsBy4 = numberOfPosts / 4
+            let klassposts = fbposts.filter((p) => {
+              return p.klass === $klass
+            })
+            let globalposts = fbposts.filter((p) => {
+              return p.klass === "global"
+            })
+            let fullposts = [...klassposts, ...globalposts]
+            posts = fullposts
+          });
+        })
+      testpost = fbposts
+      console.log(fbposts)
 
+
+
+      posts = posts
 function readMore(postContent, postName, postDescription, creatorIMG, creatorText) {
 allPosts = false
 fullPostCreatorImage = creatorIMG
@@ -80,6 +92,7 @@ fullPostCreatorName = creatorText
 </script>
 
 <main class="main">
+  {$klass}
 {#if !posters.toggle}
 {#if allPosts}
   <Container>
