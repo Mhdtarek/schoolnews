@@ -15,10 +15,10 @@
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import {firebaseConfig} from "../lib/firebaseConfig.svelte";
-import WriteData from './writeData.svelte'
+import {firebaseConfig} from "../../lib/firebaseConfig.svelte";
+import WriteData from '../writeData.svelte'
 import "firebase/auth";
-import {klass} from './Auth.svelte'
+import {klass} from '../Auth.svelte'
 if (!firebase.apps.length) {
    firebase.initializeApp({});
 }
@@ -53,6 +53,7 @@ function allPostsTrue() {
 }
 
 db.collection("posts")
+.limit(4)
 .get()
 .then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
