@@ -53,7 +53,7 @@ function allPostsTrue() {
 }
 
 db.collection("posts")
-.limit(4)
+.limit(10)
 .get()
 .then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
@@ -93,7 +93,6 @@ fullPostCreatorName = creatorText
 </script>
 
 <main class="main">
-  {$klass}
 {#if !posters.toggle}
 {#if allPosts}
   <Container>
