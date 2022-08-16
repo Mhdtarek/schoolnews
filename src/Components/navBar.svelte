@@ -13,7 +13,7 @@
   import {userPhotoURL, userDisplayName, userCreation, isLoggedIn} from './Auth.svelte'
   </script>
 <Navbar color="light" light expand="md">
-  <NavbarBrand href="#">bbrr</NavbarBrand>
+  <NavbarBrand href="#">skola nyheter</NavbarBrand>
   <Nav class="ms-auto" navbar>
     <NavItem>
       {#if $isLoggedIn}

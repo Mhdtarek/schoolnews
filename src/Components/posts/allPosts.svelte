@@ -12,21 +12,19 @@
     Row
   } from 'sveltestrap';
 
-
+import WriteData from '../writeData.svelte'
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import {firebaseConfig} from "../../lib/firebaseConfig.svelte";
-import WriteData from '../writeData.svelte'
 import "firebase/auth";
-import {klass} from '../Auth.svelte'
+import {klass, role} from '../Auth.svelte'
+import wPosts from '../Posts.svelte'
 if (!firebase.apps.length) {
    firebase.initializeApp({});
 }
 else {
    firebase.app();
 }
-
-var provider = new firebase.auth.GoogleAuthProvider();
 export const db = firebase.firestore();
 
 
@@ -53,7 +51,6 @@ function allPostsTrue() {
 }
 
 db.collection("posts")
-.limit(4)
 .get()
 .then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
@@ -93,13 +90,19 @@ fullPostCreatorName = creatorText
 </script>
 
 <main class="main">
-  {$klass}
 {#if !posters.toggle}
 {#if allPosts}
   <Container>
-    <Button color="primary" style="margin: 10px 0;"  on:click={toggle}>
-      skapa post
-    </Button>
+    {#if $role === "teacher"}
+      <Button color="primary" style="margin: 10px 0;"  on:click={toggle}>
+        skapa post
+      </Button>
+    {/if}
+    {#if $role === "elev"}
+    <div class="marginup">
+         
+    </div>
+    {/if}
     <div class="gridcon">
       {#each posts as post}
       <Col>

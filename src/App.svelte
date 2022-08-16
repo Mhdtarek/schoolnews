@@ -1,6 +1,6 @@
 <script>
 // @ts-ignore
-import Post from './Components/Post.svelte'
+import Posts from './Components/Posts.svelte'
 import NavBar from "./Components/navBar.svelte"
 import Auth from './Components/Auth.svelte'
 import {username, userDisplayName, userCreation, userPhotoURL, role, klass, isLoggedIn, isNotLoggedIn} from './Components/Auth.svelte'
@@ -9,7 +9,7 @@ import {username, userDisplayName, userCreation, userPhotoURL, role, klass, isLo
 <div>
 <NavBar/>
 {#if $isLoggedIn}
-<Post/>
+<Posts/>
 {/if}
 <div style="display: none;">
     <img src={$userPhotoURL} alt="">
@@ -25,9 +25,7 @@ import {username, userDisplayName, userCreation, userPhotoURL, role, klass, isLo
         <Auth/>
     </div>
 {/if}
-{#if $role === 'teacher'}
-teacher
-{/if}
+
 </main>
 <style>
 
