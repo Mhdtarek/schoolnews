@@ -51,6 +51,10 @@ function allPostsTrue() {
 }
 
 db.collection("posts")
+<<<<<<< HEAD
+=======
+.limit(10)
+>>>>>>> 9d83c95cf65cc65c0e623eedeae1b3e3c3ab9580
 .get()
 .then((querySnapshot) => {
     querySnapshot.forEach((doc) => {
