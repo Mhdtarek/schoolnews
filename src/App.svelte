@@ -13,6 +13,12 @@
     isLoggedIn,
     isNotLoggedIn,
   } from "./Components/Auth.svelte";
+  async function testnoti() {
+    let permission = await Notification.requestPermission();
+  }
+  async function testnoti2() {
+    const greeting = new Notification("Hi, How are you?");
+  }
 </script>
 
 <main>

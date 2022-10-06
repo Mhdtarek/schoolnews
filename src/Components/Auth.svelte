@@ -292,14 +292,6 @@
     background-color: rgb(13, 110, 253);
     display: grid;
   }
-  .bg-success {
-    border-radius: 0.25rem;
-    margin-top: 10px;
-    padding: 15px;
-    background-color: rgb(78, 134, 91);
-    color: whitesmoke;
-    text-align: center;
-  }
   .center-items {
     place-items: center;
   }
