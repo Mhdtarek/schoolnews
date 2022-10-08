@@ -12,7 +12,8 @@
     Row,
   } from "sveltestrap";
 
-  import WriteData from "./writeData.svelte";
+  // @ts-ignore
+  import WriteData from "./writePlan.svelte";
   import firebase from "firebase/app";
   import "firebase/firestore";
   import { firebaseConfig } from "../../lib/firebaseConfig.svelte";
@@ -25,99 +26,99 @@
   }
   export const db = firebase.firestore();
 
-  let posts = [];
-  let fbposts = [];
-  let testpost = [];
-  let numberOfPosts = 0;
-  let allPosts = true;
-  allPosts = true;
-  let posters = { toggle: false };
+  let plans = [];
+  let fbplans = [];
+  let testplan = [];
+  let numberOfplans = 0;
+  let allplans = true;
+  allplans = true;
+  let planers = { toggle: false };
 
-  let fullPostName = "";
-  let fullPostContent = "";
-  let fullPostDescription = "";
-  let fullPostCreatorImage = "";
-  let fullPostCreatorName = "";
+  let fullplanName = "";
+  let fullplanContent = "";
+  let fullplanDescription = "";
+  let fullplanCreatorImage = "";
+  let fullplanCreatorName = "";
   function toggle() {
-    posters.toggle = !posters.toggle;
+    planers.toggle = !planers.toggle;
   }
-  function allPostsTrue() {
-    allPosts = true;
+  function allplansTrue() {
+    allplans = true;
   }
 
-  db.collection("posts")
+  db.collection("planeringar")
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
-        let post = { ...doc.data(), id: doc.id };
-        //fbPosts = [...fbPosts, post]
-        //console.log(post)
-        numberOfPosts += 1;
-        fbposts = [...fbposts, post];
-        posts = fbposts;
-        let klassposts = fbposts.filter((p) => {
+        let plan = { ...doc.data(), id: doc.id };
+        //fbplans = [...fbplans, plan]
+        //console.log(plan)
+        numberOfplans += 1;
+        fbplans = [...fbplans, plan];
+        plans = fbplans;
+        let klassplans = fbplans.filter((p) => {
           return p.klass === $klass;
         });
-        let globalposts = fbposts.filter((p) => {
+        let globalplans = fbplans.filter((p) => {
           return p.klass === "global";
         });
-        let fullposts = [...klassposts, ...globalposts];
-        posts = fullposts;
+        let fullplans = [...klassplans, ...globalplans];
+        plans = fullplans;
       });
     });
-  testpost = fbposts;
-  console.log(fbposts);
+  testplan = fbplans;
+  console.log(fbplans);
 
-  posts = posts;
+  plans = plans;
   function readMore(
-    postContent,
-    postName,
-    postDescription,
+    planContent,
+    planName,
+    planDescription,
     creatorIMG,
     creatorText
   ) {
-    allPosts = false;
-    fullPostCreatorImage = creatorIMG;
-    fullPostName = postName;
-    fullPostContent = postContent;
-    fullPostDescription = postDescription;
-    fullPostCreatorName = creatorText;
+    allplans = false;
+    fullplanCreatorImage = creatorIMG;
+    fullplanName = planName;
+    fullplanContent = planContent;
+    fullplanDescription = planDescription;
+    fullplanCreatorName = creatorText;
   }
 </script>
 
 <main class="main">
-  {#if !posters.toggle}
-    {#if allPosts}
+  {#if !planers.toggle}
+    {#if allplans}
       <Container>
         {#if $role === "teacher"}
           <Button color="primary" style="margin: 10px 0;" on:click={toggle}>
-            skapa post
+            skapa planering
           </Button>
         {/if}
         {#if $role === "elev"}
           <div class="marginup" />
         {/if}
         <div class="gridcon">
-          {#each posts as post}
+          {#each plans as plan}
             <Col>
               <Card>
                 <CardHeader>
-                  <CardTitle>{post.name.name}</CardTitle>
+                  <CardTitle>{plan.name.name}</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <CardText>
-                    {post.description.description}
+                    {plan.description.description}
                   </CardText>
                   <Button
                     color="primary"
                     on:click={() =>
                       readMore(
-                        post.content.content,
-                        post.name.name,
-                        post.description.description,
-                        post.userCreatorImage.$userPhotoURL,
-                        post.userCreator.$userDisplayName
+                        plan.content.content,
+                        plan.name.name,
+                        plan.description.description,
+                        plan.userCreatorImage.$userPhotoURL,
+                        plan.userCreator.$userDisplayName
                       )}>Läs Mer</Button
                   >
                 </CardBody>
@@ -127,29 +128,29 @@
         </div>
       </Container>
     {/if}
-    {#if !allPosts}
+    {#if !allplans}
       <div style="margin-top: 15px">
         <Container>
-          <Button color="primary" on:click={() => (allPosts = true)}
+          <Button color="primary" on:click={() => (allplans = true)}
             >Tillbaka</Button
           >
-          <h2>{fullPostName}</h2>
+          <h2>{fullplanName}</h2>
           <div color="dark" style="margin-bottom: 10px;">
             <img
               style="border-radius: .25rem;"
-              src={fullPostCreatorImage}
+              src={fullplanCreatorImage}
               alt=""
               width="32"
               height="32"
-            /> <span>skapat av {fullPostCreatorName}</span>
+            /> <span>skapat av {fullplanCreatorName}</span>
           </div>
-          <h5>{fullPostDescription}</h5>
-          <p>{fullPostContent}</p>
+          <h5>{fullplanDescription}</h5>
+          <p>{fullplanContent}</p>
         </Container>
       </div>
     {/if}
   {/if}
-  {#if posters.toggle}
+  {#if planers.toggle}
     <div class="marginup">
       <Container>
         <Button color="primary" style="margin: 0px 0;" on:click={toggle}>

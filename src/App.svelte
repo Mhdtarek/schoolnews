@@ -1,6 +1,7 @@
 <script>
   // @ts-ignore
-  import Posts from "./Components/Posts.svelte";
+  import Posts from "./Components/posts/allPosts.svelte";
+  import Plans from "./Components/plans/plans.svelte";
   import NavBar from "./Components/navBar.svelte";
   import Auth from "./Components/Auth.svelte";
   import {
@@ -13,18 +14,24 @@
     isLoggedIn,
     isNotLoggedIn,
   } from "./Components/Auth.svelte";
-  async function testnoti() {
-    let permission = await Notification.requestPermission();
-  }
-  async function testnoti2() {
-    const greeting = new Notification("Hi, How are you?");
-  }
+  import { TabContent, TabPane, Container } from "sveltestrap";
 </script>
 
 <main>
   <NavBar />
   {#if $isLoggedIn}
-    <Posts />
+    <div style="margin-top: 15px">
+      <Container>
+        <TabContent>
+          <TabPane tabId="posts" tab="Posts" active>
+            <Posts />
+          </TabPane>
+          <TabPane tabId="plans" tab="Planeringar" active>
+            <Plans />
+          </TabPane>
+        </TabContent>
+      </Container>
+    </div>
   {/if}
   <div style="display: none;">
     <img src={$userPhotoURL} alt="" />
