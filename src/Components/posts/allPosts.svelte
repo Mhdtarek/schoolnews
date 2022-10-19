@@ -10,6 +10,7 @@
     Container,
     Icon,
     Row,
+    Badge,
   } from "sveltestrap";
 
   import WriteData from "./writeData.svelte";
@@ -38,6 +39,7 @@
   let fullPostDescription = "";
   let fullPostCreatorImage = "";
   let fullPostCreatorName = "";
+  let fullPlaneringSelection = {};
   function toggle() {
     posters.toggle = !posters.toggle;
   }
@@ -75,7 +77,8 @@
     postName,
     postDescription,
     creatorIMG,
-    creatorText
+    creatorText,
+    planeringSelection
   ) {
     allPosts = false;
     fullPostCreatorImage = creatorIMG;
@@ -83,18 +86,19 @@
     fullPostContent = postContent;
     fullPostDescription = postDescription;
     fullPostCreatorName = creatorText;
+    fullPlaneringSelection = planeringSelection;
   }
 </script>
 
 <main class="main">
   {#if !posters.toggle}
     {#if allPosts}
+      {#if $role === "teacher"}
+        <Button color="primary" style="margin: 10px 0;" on:click={toggle}>
+          skapa Lärologg
+        </Button>
+      {/if}
       <Container>
-        {#if $role === "teacher"}
-          <Button color="primary" style="margin: 10px 0;" on:click={toggle}>
-            skapa post
-          </Button>
-        {/if}
         {#if $role === "elev"}
           <div class="marginup" />
         {/if}
@@ -117,7 +121,8 @@
                         post.name.name,
                         post.description.description,
                         post.userCreatorImage.$userPhotoURL,
-                        post.userCreator.$userDisplayName
+                        post.userCreator.$userDisplayName,
+                        post.planeringSelection
                       )}>Läs Mer</Button
                   >
                 </CardBody>
@@ -129,33 +134,45 @@
     {/if}
     {#if !allPosts}
       <div style="margin-top: 15px">
+        <Button color="primary" on:click={() => (allPosts = true)}
+          >Tillbaka</Button
+        >
         <Container>
-          <Button color="primary" on:click={() => (allPosts = true)}
-            >Tillbaka</Button
-          >
-          <h2>{fullPostName}</h2>
-          <div color="dark" style="margin-bottom: 10px;">
+          <h2 style="margin-bottom: 15px; margin-top: 10px;">{fullPostName}</h2>
+          <div color="dark" style="margin-bottom: 10px; margin-top: 10px;">
             <img
               style="border-radius: .25rem;"
               src={fullPostCreatorImage}
               alt=""
               width="32"
               height="32"
-            /> <span>skapat av {fullPostCreatorName}</span>
+            /> <span>skapat av <b>{fullPostCreatorName}</b></span>
           </div>
-          <h5>{fullPostDescription}</h5>
+          <h6>{fullPostDescription}</h6>
           <p>{fullPostContent}</p>
+          {#if fullPlaneringSelection.isSelected == true}
+            <Card class="mb-3">
+              <CardHeader>
+                <Badge pill color="secondary">planering</Badge>
+                <CardTitle>{fullPlaneringSelection.name}</CardTitle>
+              </CardHeader>
+              <CardBody>
+                <CardText>
+                  {fullPlaneringSelection.description}
+                </CardText>
+                <Button>Läs Hela</Button>
+              </CardBody>
+            </Card>
+          {/if}
         </Container>
       </div>
     {/if}
   {/if}
   {#if posters.toggle}
     <div class="marginup">
-      <Container>
-        <Button color="primary" style="margin: 0px 0;" on:click={toggle}>
-          Gå tillbaka
-        </Button>
-      </Container>
+      <Button color="primary" style="margin: 0px 0;" on:click={toggle}>
+        Gå tillbaka
+      </Button>
 
       <WriteData />
     </div>

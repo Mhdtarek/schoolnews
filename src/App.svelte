@@ -4,6 +4,7 @@
   import Plans from "./Components/plans/plans.svelte";
   import NavBar from "./Components/navBar.svelte";
   import Auth from "./Components/Auth.svelte";
+  import TimeTable from "./Components/timetable/timetableViewer.svelte";
   import {
     username,
     userDisplayName,
@@ -23,11 +24,14 @@
     <div style="margin-top: 15px">
       <Container>
         <TabContent>
-          <TabPane tabId="posts" tab="Posts" active>
+          <TabPane tabId="posts" tab="Lärologg" active>
             <Posts />
           </TabPane>
           <TabPane tabId="plans" tab="Planeringar" active>
             <Plans />
+          </TabPane>
+          <TabPane tabId="timeTable" tab="Schema" active>
+            <TimeTable />
           </TabPane>
         </TabContent>
       </Container>

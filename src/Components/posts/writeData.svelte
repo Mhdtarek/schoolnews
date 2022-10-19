@@ -11,6 +11,12 @@
     DropdownMenu,
     DropdownItem,
     DropdownToggle,
+    Card,
+    CardBody,
+    CardHeader,
+    CardText,
+    CardTitle,
+    Alert,
   } from "sveltestrap";
   import firebase from "firebase/app";
   import "firebase/firestore";
@@ -29,6 +35,18 @@
   let isCollapseOpen = false;
   let docSuccess = false;
   let klass;
+  let plans = [];
+  let fbplans = [];
+  let visible = false;
+
+  let planeringSelection = {
+    isSelected: false,
+    content: "",
+    name: "",
+    description: "",
+    creator: "",
+    creatorImage: "",
+  };
 
   export const db = firebase.firestore();
 
@@ -45,6 +63,7 @@
         userCreatorImage: userPhotoURL2,
         userId: userId2,
         klass: klass,
+        planeringSelection: planeringSelection,
       })
       .then((docRef) => {
         console.log("Document written with ID: ", docRef.id);
@@ -54,10 +73,51 @@
         console.error("Error adding document: ", error);
       });
   }
+  function select(content, name, description, creator, creatorImage) {
+    isCollapseOpen = false;
+    visible = true;
+    planeringSelection = {
+      isSelected: true,
+      description: description,
+      creator: creator,
+      creatorImage: creatorImage,
+      name: name,
+      content: content,
+    };
+  }
+
+  db.collection("planeringar")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        let plan = { ...doc.data(), id: doc.id };
+        //fbplans = [...fbplans, plan]
+        //console.log(plan)
+        fbplans = [...fbplans, plan];
+        plans = fbplans;
+        let klassplans = fbplans.filter((p) => {
+          return p.klass === $klass;
+        });
+        let globalplans = fbplans.filter((p) => {
+          return p.klass === "global";
+        });
+        let fullplans = [...klassplans, ...globalplans];
+        plans = fullplans;
+      });
+    });
 </script>
 
 <main>
   {#if !docSuccess}
+    <Alert
+      style="margin-top: 10px;"
+      color="info"
+      isOpen={visible}
+      toggle={() => (visible = false)}
+    >
+      planering {planeringSelection.name} är vald.
+    </Alert>
     <Row>
       <Col sm="12" md={{ size: 6, offset: 3 }}>
         <FormGroup>
@@ -123,11 +183,39 @@
                 color="secondary"
                 on:click={() => (isCollapseOpen = !isCollapseOpen)}
               >
-                planering
+                länka en planering
               </Button>
             </div>
           </Col>
         </Row>
+        {#if isCollapseOpen == true}
+          <div class="gridcon">
+            {#each plans as plan}
+              <Col>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>{plan.name.name}</CardTitle>
+                  </CardHeader>
+                  <CardBody>
+                    <CardText>
+                      {plan.description.description}
+                    </CardText>
+                    <Button
+                      color="primary"
+                      on:click={() =>
+                        select(
+                          plan.content.content,
+                          plan.name.name,
+                          plan.description.description,
+                          plan.userCreatorImage.$userPhotoURL,
+                          plan.userCreator.$userDisplayName
+                        )}>Välj Planering</Button
+                    >
+                  </CardBody>
+                </Card>
+              </Col>
+            {/each}
+          </div>{/if}
         <Button style="margin-top: 10px;" color="primary" on:click={post}
           >Lägg</Button
         >
@@ -152,5 +240,17 @@
     background-color: rgb(78, 134, 91);
     color: whitesmoke;
     text-align: center;
+  }
+  @media only screen and (max-width: 900px) {
+    .gridcon {
+      grid-template-columns: 1fr;
+    }
+  }
+  .gridcon {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 10px;
+    row-gap: 15px;
   }
 </style>

@@ -20,7 +20,7 @@
   import "firebase/auth";
   import { klass, role } from "../Auth.svelte";
   if (!firebase.apps.length) {
-    firebase.initializeApp({});
+    firebase.initializeApp(firebaseConfig);
   } else {
     firebase.app();
   }
@@ -67,8 +67,6 @@
         plans = fullplans;
       });
     });
-  testplan = fbplans;
-  console.log(fbplans);
 
   plans = plans;
   function readMore(
@@ -90,12 +88,12 @@
 <main class="main">
   {#if !planers.toggle}
     {#if allplans}
+      {#if $role === "teacher"}
+        <Button color="primary" style="margin: 10px 0;" on:click={toggle}>
+          skapa planering
+        </Button>
+      {/if}
       <Container>
-        {#if $role === "teacher"}
-          <Button color="primary" style="margin: 10px 0;" on:click={toggle}>
-            skapa planering
-          </Button>
-        {/if}
         {#if $role === "elev"}
           <div class="marginup" />
         {/if}
@@ -130,10 +128,10 @@
     {/if}
     {#if !allplans}
       <div style="margin-top: 15px">
+        <Button color="primary" on:click={() => (allplans = true)}
+          >Tillbaka</Button
+        >
         <Container>
-          <Button color="primary" on:click={() => (allplans = true)}
-            >Tillbaka</Button
-          >
           <h2>{fullplanName}</h2>
           <div color="dark" style="margin-bottom: 10px;">
             <img
@@ -152,11 +150,9 @@
   {/if}
   {#if planers.toggle}
     <div class="marginup">
-      <Container>
-        <Button color="primary" style="margin: 0px 0;" on:click={toggle}>
-          Gå tillbaka
-        </Button>
-      </Container>
+      <Button color="primary" style="margin: 0px 0;" on:click={toggle}>
+        Gå tillbaka
+      </Button>
 
       <WriteData />
     </div>
