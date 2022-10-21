@@ -38,7 +38,6 @@
       console.log("Error getting document:", error);
       visible = true;
     });
-  console.log(`klass_${$klass}`);
 </script>
 
 <main>
@@ -74,7 +73,7 @@
     </div>
   {/if}
   {#if isWriterVisible}
-    <div style="margin-top: 10px;">
+    <div style="margin-top: 10px; margin-bottom: 10px;">
       <Button color="primary" on:click={() => (isWriterVisible = false)}
         >Gå tillbaka</Button
       >
