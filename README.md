@@ -1,4 +1,3 @@
-THIS IS ARCHIVED, this will no longer be worked on. Its using a legacy version of firebase
 # School news - share news between students in a school
 ### How it works
 some one deploys the website on vercel then they add the firebase config (for auth and database) and then they can start sharing news!
