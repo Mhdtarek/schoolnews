@@ -48,6 +48,7 @@
   }
 
   db.collection("posts")
+    .where("klass", "==", $klass)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -58,14 +59,20 @@
         numberOfPosts += 1;
         fbposts = [...fbposts, post];
         posts = fbposts;
-        let klassposts = fbposts.filter((p) => {
-          return p.klass === $klass;
-        });
-        let globalposts = fbposts.filter((p) => {
-          return p.klass === "global";
-        });
-        let fullposts = [...klassposts, ...globalposts];
-        posts = fullposts;
+      });
+    });
+  db.collection("posts")
+    .where("klass", "==", "global")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        let post = { ...doc.data(), id: doc.id };
+        //fbPosts = [...fbPosts, post]
+        //console.log(post)
+        numberOfPosts += 1;
+        fbposts = [...fbposts, post];
+        posts = fbposts;
       });
     });
   testpost = fbposts;

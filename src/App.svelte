@@ -27,25 +27,16 @@
           <TabPane tabId="posts" tab="Lärologg" active>
             <Posts />
           </TabPane>
-          <TabPane tabId="plans" tab="Planeringar" active>
+          <TabPane tabId="plans" tab="Planeringar">
             <Plans />
           </TabPane>
-          <TabPane tabId="timeTable" tab="Schema" active>
+          <TabPane tabId="timeTable" tab="Schema">
             <TimeTable />
           </TabPane>
         </TabContent>
       </Container>
     </div>
   {/if}
-  <div style="display: none;">
-    <img src={$userPhotoURL} alt="" />
-    <p>{$username}</p>
-    <p>{$userDisplayName}</p>
-    <p>{$userPhotoURL}</p>
-    <p>{$userCreation}</p>
-    <p>{$role}</p>
-    <p>{$klass}</p>
-  </div>
   {#if !$isNotLoggedIn}
     <div>
       <Auth />

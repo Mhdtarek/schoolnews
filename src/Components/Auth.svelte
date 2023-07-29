@@ -38,6 +38,8 @@
   export const role = writable("");
   export const klass = writable("");
 
+  // @ts-ignore
+
   function Login() {
     firebase
       .auth()

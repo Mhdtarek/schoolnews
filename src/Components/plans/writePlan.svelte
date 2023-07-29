@@ -72,7 +72,7 @@
           <Input type="text" bind:value={description} />
         </FormGroup>
         <FormGroup>
-          <Label>Innehål</Label>
+          <Label>Innehåll</Label>
           <Input
             bind:value={content}
             style="height: 150px;"

@@ -47,6 +47,7 @@
   }
 
   db.collection("planeringar")
+    .where("klass", "==", $klass)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -57,14 +58,20 @@
         numberOfplans += 1;
         fbplans = [...fbplans, plan];
         plans = fbplans;
-        let klassplans = fbplans.filter((p) => {
-          return p.klass === $klass;
-        });
-        let globalplans = fbplans.filter((p) => {
-          return p.klass === "global";
-        });
-        let fullplans = [...klassplans, ...globalplans];
-        plans = fullplans;
+      });
+    });
+  db.collection("planeringar")
+    .where("klass", "==", "global")
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        let plan = { ...doc.data(), id: doc.id };
+        //fbplans = [...fbplans, plan]
+        //console.log(plan)
+        numberOfplans += 1;
+        fbplans = [...fbplans, plan];
+        plans = fbplans;
       });
     });
 
