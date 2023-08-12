@@ -21,7 +21,7 @@
 <main>
   <NavBar />
   {#if $isLoggedIn}
-    <div style="margin-top: 15px">
+    <div style="margin-top: 22px">
       <Container>
         <TabContent>
           <TabPane tabId="posts" tab="Lärologg" active>
